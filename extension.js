@@ -2,6 +2,14 @@ const Lang = imports.lang;
 const Main = imports.ui.main;
 const PopupMenu = imports.ui.popupMenu;
 const GLib = imports.gi.GLib;
+const Gst = imports.gi.Gst;
+
+const Gettext = imports.gettext;
+
+Gettext.textdomain("gradio@ivoavnunes.gmail.com");
+//Gettext.bindtextdomain("gradio@ivoavnunes.gmail.com", ExtensionSystem.extensionMeta["gradio@ivoavnunes.gmail.com"].path + "/locale");
+
+const _ = Gettext.gettext;
 
 const RadioSubMenu = new Lang.Class({
     Name: 'RadioSubMenu',
@@ -10,8 +18,23 @@ const RadioSubMenu = new Lang.Class({
     _init: function() {
         this.parent('None', true);
 
-        // kill all active streams
-        this._killStream();
+        // initialize the player
+        this._playing = false;
+        this.player = Gst.ElementFactory.make("playbin", "player");
+        this.bus = this.player.get_bus();
+        this.bus.add_signal_watch();
+
+        // connect the dbus events
+        this.bus.connect("message::state-changed", Lang.bind(this, function(bus, message) {
+            //this._killStream();
+        }));
+        this.bus.connect("message::error", Lang.bind(this, function(bus, message) {
+            this._killStream();
+            return true;
+        }));
+        this.bus.connect("message::eos", Lang.bind(this, function(bus, message) {
+            this._killStream();
+        }));
 
         this.actor.show();
 
@@ -20,19 +43,17 @@ const RadioSubMenu = new Lang.Class({
                 this._updateStreamList();
         }));
 
-        let item = new PopupMenu.PopupMenuItem('None');
+        let item = new PopupMenu.PopupMenuItem(_("Radio"));
         this.menu.addMenuItem(item);
     },
 
     _killStream: function () {
         // set current stream to none
-        this.label.set_text("None");
+        this._playing = false;
+        this.label.set_text(_("Radio"));
         this.icon.icon_name = "";
 
-        try {
-            GLib.spawn_async(null, ["killall", "mplayer"], null, GLib.SpawnFlags.SEARCH_PATH, null);
-        } catch (err) {
-        }
+        this.player.set_state(Gst.State.NULL);
     },
 
     _updateStreamList: function () {
@@ -43,6 +64,17 @@ const RadioSubMenu = new Lang.Class({
 
         // clean the list before updating it
         this.menu.removeAll();
+
+        if (this._playing) {
+            // create an item to stop the current streams
+            let item = new PopupMenu.PopupMenuItem(_("Stop"));
+
+            item.connect('activate', Lang.bind(this, function() {
+                this._killStream();
+            }));
+
+            this.menu.addMenuItem(item);
+        }
 
         // for each stream in our list
         for(i = 0; i < streams.length; i++) {
@@ -56,32 +88,19 @@ const RadioSubMenu = new Lang.Class({
 
             this.menu.addMenuItem(item);
         }
-
-        // create an item to stop the current stream
-        let item = new PopupMenu.PopupMenuItem("None");
-
-        item.connect('activate', Lang.bind(this, function() {
-            this._killStream();
-        }));
-
-        this.menu.addMenuItem(item);
     },
 
     _playStream: function (stream) {
         // make sure nothing is playing first
         this._killStream();
+        this._playing = true;
 
         // set the info in the ui
         this.label.set_text(stream[0]);
         this.icon.icon_name = 'emblem-music-symbolic';
 
-        // start the stream
-        try {
-            GLib.spawn_async(null, ["mplayer", stream[1]], null, GLib.SpawnFlags.SEARCH_PATH, null);
-        } catch (err) {
-            this.label.set_text("None");
-            this.icon.icon_name = "";
-        }
+        this.player.set_property("uri", stream[1]);
+        this.player.set_state(Gst.State.PLAYING);
     },
 
     destroy: function() {
@@ -92,6 +111,7 @@ const RadioSubMenu = new Lang.Class({
 let radioSubMenu = null;
 
 function init() {
+    Gst.init(null, 0);
 }
 
 function enable() {
