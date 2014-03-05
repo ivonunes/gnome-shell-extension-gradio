@@ -1,0 +1,9 @@
+{
+    "shell-version": [
+        "3.10"
+    ],
+    "uuid": "gradio@ivoavnunes.gmail.com",
+    "name": "Gradio",
+    "description": "Listen to Internet radio.",
+    "url": "http://github.com/ivonunes/gnome-shell-extension-gradio"
+}
