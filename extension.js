@@ -3,12 +3,7 @@ const Main = imports.ui.main;
 const PopupMenu = imports.ui.popupMenu;
 const GLib = imports.gi.GLib;
 const Gst = imports.gi.Gst;
-
 const Gettext = imports.gettext;
-
-Gettext.textdomain("gradio@ivoavnunes.gmail.com");
-//Gettext.bindtextdomain("gradio@ivoavnunes.gmail.com", ExtensionSystem.extensionMeta["gradio@ivoavnunes.gmail.com"].path + "/locale");
-
 const _ = Gettext.gettext;
 
 const RadioSubMenu = new Lang.Class({
@@ -16,7 +11,7 @@ const RadioSubMenu = new Lang.Class({
     Extends: PopupMenu.PopupSubMenuMenuItem,
 
     _init: function() {
-        this.parent('Radio', true);
+        this.parent(_("Radio"), true);
 
         // initialize the player
         this._playing = false;
@@ -25,9 +20,6 @@ const RadioSubMenu = new Lang.Class({
         this.bus.add_signal_watch();
 
         // connect the dbus events
-        this.bus.connect("message::state-changed", Lang.bind(this, function(bus, message) {
-            //this._killStream();
-        }));
         this.bus.connect("message::error", Lang.bind(this, function(bus, message) {
             this._killStream();
             return true;
@@ -104,14 +96,20 @@ const RadioSubMenu = new Lang.Class({
     },
 
     destroy: function() {
+        this._playing = false;
+        this.player.set_state(Gst.State.NULL);
         this.parent();
     }
 });
 
 let radioSubMenu = null;
 
-function init() {
+function init(meta) {
     Gst.init(null, 0);
+
+    Gettext.textdomain("gradio@ivoavnunes.gmail.com");
+    let localeDir = meta.dir.get_child('locale');
+    Gettext.bindtextdomain("gradio@ivoavnunes.gmail.com", localeDir.get_path());
 }
 
 function enable() {
