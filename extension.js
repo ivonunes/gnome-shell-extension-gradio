@@ -16,7 +16,7 @@ const RadioSubMenu = new Lang.Class({
     Extends: PopupMenu.PopupSubMenuMenuItem,
 
     _init: function() {
-        this.parent('None', true);
+        this.parent('Radio', true);
 
         // initialize the player
         this._playing = false;
