@@ -77,7 +77,7 @@ function buildPrefsWidget() {
 
     var streams_settings = settings.get_string('streams');
     if (streams_settings.length > 0) this.streams = JSON.parse(streams_settings);
-    else this.streams = [["Radio Paradise","http://37.130.228.60:8012"]];
+    else this.streams = [["Radio Paradise","http://stream-dc1.radioparadise.com/rp_192m.ogg"]];
 
     for (var i = 0; i < this.streams.length; i++) {
         this.list.insert(new Gtk.Label({label: this.streams[i][0]}), this.list.get_children().length);

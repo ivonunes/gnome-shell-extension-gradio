@@ -70,7 +70,7 @@ const RadioSubMenu = new Lang.Class({
     _updateStreamList: function () {
         var streams_settings = this.settings.get_string('streams');
         if (streams_settings.length > 0) var streams = JSON.parse(streams_settings);
-        else var streams = [["Radio Paradise","http://37.130.228.60:8012"]];
+        else var streams = [["Radio Paradise","http://stream-dc1.radioparadise.com/rp_192m.ogg"]];
 
         // clean the list before updating it
         this.menu.removeAll();
