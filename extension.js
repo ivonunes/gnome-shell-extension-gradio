@@ -1,3 +1,15 @@
+/*
+ * Copyright (C) 2014 Ivo Nunes <ivoavnunes@gmail.com>
+ *
+ * This software is licensed under the GNU General Public License
+ * (version 3 or later). See the COPYING file in this distribution.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this software; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
 const Lang = imports.lang;
 const Main = imports.ui.main;
 const PopupMenu = imports.ui.popupMenu;
@@ -6,12 +18,19 @@ const Gst = imports.gi.Gst;
 const Gettext = imports.gettext;
 const _ = Gettext.gettext;
 
+const ExtensionUtils = imports.misc.extensionUtils;
+const Me = ExtensionUtils.getCurrentExtension();
+const Utils = Me.imports.utils;
+
 const RadioSubMenu = new Lang.Class({
     Name: 'RadioSubMenu',
     Extends: PopupMenu.PopupSubMenuMenuItem,
 
     _init: function() {
         this.parent(_("Radio"), true);
+
+        // get settings
+        this.settings = Utils.getSettings();
 
         // initialize the player
         this._playing = false;
@@ -49,10 +68,9 @@ const RadioSubMenu = new Lang.Class({
     },
 
     _updateStreamList: function () {
-        // streams list. TODO: load from file
-        let streams = [
-            ["Radio Paradise", "http://37.130.228.60:8012"]
-        ];
+        var streams_settings = this.settings.get_string('streams');
+        if (streams_settings.length > 0) var streams = JSON.parse(streams_settings);
+        else var streams = [["Radio Paradise","http://37.130.228.60:8012"]];
 
         // clean the list before updating it
         this.menu.removeAll();
