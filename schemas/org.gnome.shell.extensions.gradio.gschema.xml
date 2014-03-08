@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist gettext-domain="gradio@ivoavnunes.gmail.com">
+  <schema path="/org/gnome/shell/extensions/gradio/" id="org.gnome.shell.extensions.gradio">
+    <key type="s" name="streams">
+      <default>""</default>
+      <summary>List of streams</summary>
+      <description>List of streams in JSON format.</description>
+    </key>
+  </schema>
+</schemalist>
