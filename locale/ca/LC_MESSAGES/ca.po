@@ -1,0 +1,51 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Gnome Shell Extension GRadio\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-10-17 01:09-0500\n"
+"PO-Revision-Date: 2015-10-17 01:11-0500\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.4\n"
+"Last-Translator: Adolfo Jayme Barrientos <fitojb@ubuntu.com>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: ca\n"
+
+#: prefs.js:41
+msgid "Insert a stream"
+msgstr "Inseriu un flux"
+
+#: prefs.js:49
+msgid "Name:"
+msgstr "Nom:"
+
+#: prefs.js:54
+msgid "URL:"
+msgstr "URL:"
+
+#: prefs.js:59
+msgid "Add"
+msgstr "Afegeix"
+
+#: prefs.js:74
+msgid "Streams"
+msgstr "Fluxos"
+
+#: prefs.js:91
+msgid "Remove"
+msgstr "Elimina"
+
+#: extension.js:30 extension.js:57 extension.js:64
+msgid "Radio"
+msgstr "Ràdio"
+
+#: extension.js:80
+msgid "Stop"
+msgstr "Atura"
